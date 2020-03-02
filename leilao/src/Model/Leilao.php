@@ -2,8 +2,7 @@
 
 namespace Alura\Leilao\Model;
 
-class Leilao
-{
+class Leilao {
     /** @var Lance[] */
     private $lances;
     /** @var string */
