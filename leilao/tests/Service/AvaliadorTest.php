@@ -11,51 +11,74 @@ use PHPUnit\Framework\TestCase;
 class AvaliadorTest extends TestCase {
 
   /**
-   * Test avalia() with order crescent.
+   * Set up.
    */
-  public function testAvaliaWithOrderCrescent() {
-    // Arrange - Given
-    $leilao = new Leilao('Fiat 147 0KM');
+  public function setUp(): void {
+    $this->leilao = new Leilao('Fiat 147 0KM');
+    $this->leiloeiro = new Avaliador();
 
-    $maria = new Usuario('Maria');
-    $joao = new Usuario('João');
+    $this->maria = new Usuario('Maria');
+    $this->joao = new Usuario('João');
+  }
 
-    $leilao->recebeLance(new Lance($joao, 2000));
-    $leilao->recebeLance(new Lance($maria, 2500));
+  /**
+   * Test avalia() maior valor with order crescent.
+   */
+  public function testAvaliaMaiorValorWithOrderCrescent() {
+    $this->leilao->recebeLance(new Lance($this->joao, 2000));
+    $this->leilao->recebeLance(new Lance($this->maria, 2500));
 
-    $leiloeiro = new Avaliador();
+    $this->leiloeiro->avalia($this->leilao);
 
-    // Act - When
-    $leiloeiro->avalia($leilao);
-
-    $maiorValor = $leiloeiro->getMaiorValor();
+    $maiorValor = $this->leiloeiro->getMaiorValor();
 
     // Assert - Then
     $this->assertEquals(2500, $maiorValor);
   }
 
   /**
-   * Test avalia() with order decrescent.
+   * Test avalia() maior valor with order decrescent.
    */
-  public function testAvaliaWithOrderDecrescent() {
-    // Arrange - Given
-    $leilao = new Leilao('Fiat 147 0KM');
+  public function testAvaliaMaiorValorWithOrderDecrescent() {
+    $this->leilao->recebeLance(new Lance($this->maria, 2500));
+    $this->leilao->recebeLance(new Lance($this->joao, 2000));
 
-    $maria = new Usuario('Maria');
-    $joao = new Usuario('João');
+    $this->leiloeiro->avalia($this->leilao);
 
-    $leilao->recebeLance(new Lance($maria, 2500));
-    $leilao->recebeLance(new Lance($joao, 2000));
-
-    $leiloeiro = new Avaliador();
-
-    // Act - When
-    $leiloeiro->avalia($leilao);
-
-    $maiorValor = $leiloeiro->getMaiorValor();
+    $maiorValor = $this->leiloeiro->getMaiorValor();
 
     // Assert - Then
     $this->assertEquals(2500, $maiorValor);
+  }
+
+  /**
+   * Test avalia() menor valor with order crescent.
+   */
+  public function testAvaliaMenorValorWithOrderCrescent() {
+    $this->leilao->recebeLance(new Lance($this->joao, 2000));
+    $this->leilao->recebeLance(new Lance($this->maria, 2500));
+
+    $this->leiloeiro->avalia($this->leilao);
+
+    $menorValor = $this->leiloeiro->getMenorValor();
+
+    // Assert - Then
+    $this->assertEquals(2000, $menorValor);
+  }
+
+  /**
+   * Test avalia() menor valor with order decrescent.
+   */
+  public function testAvaliaMenorValorWithOrderDecrescent() {
+    $this->leilao->recebeLance(new Lance($this->maria, 2500));
+    $this->leilao->recebeLance(new Lance($this->joao, 2000));
+
+    $this->leiloeiro->avalia($this->leilao);
+
+    $menorValor = $this->leiloeiro->getMenorValor();
+
+    // Assert - Then
+    $this->assertEquals(2000, $menorValor);
   }
 
 }
