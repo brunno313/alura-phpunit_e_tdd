@@ -11,16 +11,30 @@ class Avaliador {
    */
   private $maiorValor = -INF;
 
+  /**
+   * @var float
+   */
+  private $menorValor = INF;
+
   public function avalia(Leilao $leilao): void {
       foreach ($leilao->getLances() as $lance) {
-        if ($lance->getValor() > $this->maiorValor) {
-          $this->maiorValor = $lance->getValor();
+        $valorLance = $lance->getValor();
+
+        if ($valorLance > $this->maiorValor) {
+          $this->maiorValor = $valorLance;
+        }
+        if ($valorLance < $this->menorValor) {
+          $this->menorValor = $valorLance;
         }
       }
   }
 
   public function getMaiorValor(): float {
     return $this->maiorValor;
+  }
+
+  public function getMenorValor(): float {
+    return $this->menorValor;
   }
 
 }
